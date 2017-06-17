@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:form id="formEdicao">
+        <h:panelGroup rendered="#{controlePacientes.editando}">
+            <div class="ui-fluid">
+                <p:messages/>
+                <p:panelGrid columns="2" columnClasses="ui-grid-col-2, ui-grid-col-20"
+                             layout="grid" styleClass="ui-panelgrid-blank">
+                    <f:facet name="header">
+                        <p:outputLabel value="Edição de Pacientes"/>
+                    </f:facet>
+                    <p:outputLabel for="txtID" value="ID"/>
+                    <p:inputText id="txtID" value="#{controlePacientes.objeto.id}" readonly="true"
+                                 size="10"/>
+                    <p:outputLabel for="txtNome" value="Nome"/>
+                    <p:inputText id="txtNome" value="#{controlePacientes.objeto.nome}"
+                                 size="40" maxlength="40"       
+                                 placeholder="Obrigatório"/>
+                    <p:outputLabel for="txtEmail" value="Email"/>
+                    <p:inputText id="txtEmail" value="#{controlePacientes.objeto.email}"
+                                 size="50" maxlength="50"
+                                 placeholder="Obrigatório"/>
+                    <p:outputLabel for="txtNascimento" value="Nascimento"/>
+                    <p:calendar id="txtNascimento" value="#{controlePacientes.objeto.nascimento}"
+                                mask="true" pattern="dd/MM/yyyy"
+                                placeholder="Obrigatório"
+                                navigator="true">
+                        <f:converter converterId="converterCalendar"/>
+                    </p:calendar>
+                    <p:outputLabel value="RG" for="txtRG"/>
+                    <p:inputText id="txtRG" value="#{controlePacientes.objeto.rg}"
+                                 size="30" maxlength="30" placeholder="Obrigatório"/>
+                    <p:outputLabel value="Cartao do SUS" for="txtCartao"/>
+                    <p:inputText  id="txtCartao" value="#{controlePacientes.objeto.nrCartaoSUS}"
+                                size="20" maxlength="20" placeholder="Obrigatório" />
+                    <p:outputLabel value="Tipo sanguineo" for="txtTipo"/>
+                    <p:inputText  id="txtTipo" value="#{controlePacientes.objeto.tiposanguineo}"
+                                size="20" maxlength="20" placeholder="Obrigatório" />
+                    <p:commandButton value="Salvar" icon="ui-icon-disk"
+                                     actionListener="#{controlePacientes.salvar()}"
+                                     update="formEdicao :formListagem"/>
+                </p:panelGrid>
+                <h:panelGroup id="painelUnidade">
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2, ui-grid-col-20"
+                        layout="grid" styleClass="ui-panelgrid-blank"
+                        rendered="#{controlePacientes.editandoUnidade}">
+                        <f:facet name="header">
+                            <p:outputLabel value="Nova unidade de Atendimento do Paciente"/>
+                        </f:facet>             
+                        <p:outputLabel value="Unidade de Atendimento"/>
+                        <p:selectOneMenu id="selectUnidade" value="#{controlePacientes.unidade}">
+                            <f:selectItem itemLabel="Selecione um registro" 
+                                          noSelectionOption="true"/>
+                            <f:selectItems value="#{controlePacientes.daoUnidade.listaTodos}"
+                                           var="p" itemLabel="#{p.nome}"/>
+                            <f:converter converterId="converterUnidade"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value=""/>
+                        <p:commandButton value="Salvar Unidade" icon="ui-icon-disk"
+                                         actionListener="#{controlePacientes.salvarUnidade()}"
+                                         id="btnSalvarUnidade"
+                                         process="btnSalvarUnidade selectUnidade"
+                                         update="@form"/>
+                    </p:panelGrid>
+                </h:panelGroup>
+            </div>
+            <h:panelGroup id="listagemPermissoes">
+                <h:panelGroup rendered="#{!controlePacientes.editandoUnidade}">
+                    <p:commandButton value="Nova Unidade" icon="ui-icon-plus"
+                                     actionListener="#{controlePacientes.novaUnidade()}"
+                                     update="painelUnidade listagemPermissoes"
+                                     process="@this"/>
+                    <p:dataTable value="#{controlePacientes.objeto.unidadesPacientes}"
+                                 var="per" reflow="true">
+                        <f:facet name="header">
+                            <p:outputLabel value="Permissões do usuário"/>
+                        </f:facet>
+                        <p:column headerText="Nome">
+                            <p:outputLabel value="#{per.nome}"/>
+                        </p:column>
+                        <p:column headerText="Endereco">
+                            <p:outputLabel value="#{per.endereco}"/>
+                        </p:column>
+                        <p:column headerText="Capacidade">
+                            <p:outputLabel value="#{per.capacidade}"/>
+                        </p:column>
+                        <p:column headerText="Ações">
+                            <div align="center">
+                                <p:commandButton icon="ui-icon-trash"
+                                  actionListener="#{controlePacientes.removerUnidade(per)}"
+                                  process="@this" update="@form"/>
+                            </div>
+                        </p:column>                        
+                    </p:dataTable>
+                </h:panelGroup>
+            </h:panelGroup>
+        </h:panelGroup>
+    </h:form>
+</html>
+
