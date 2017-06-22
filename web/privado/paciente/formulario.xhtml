@@ -68,16 +68,16 @@
                     </p:panelGrid>
                 </h:panelGroup>
             </div>
-            <h:panelGroup id="listagemPermissoes">
+            <h:panelGroup id="listagemUnidades">
                 <h:panelGroup rendered="#{!controlePacientes.editandoUnidade}">
                     <p:commandButton value="Nova Unidade" icon="ui-icon-plus"
                                      actionListener="#{controlePacientes.novaUnidade()}"
-                                     update="painelUnidade listagemPermissoes"
+                                     update="painelUnidade listagemUnidades"
                                      process="@this"/>
                     <p:dataTable value="#{controlePacientes.objeto.unidadesPacientes}"
                                  var="per" reflow="true">
                         <f:facet name="header">
-                            <p:outputLabel value="Permissões do usuário"/>
+                            <p:outputLabel value="Unidades do Paciente"/>
                         </f:facet>
                         <p:column headerText="Nome">
                             <p:outputLabel value="#{per.nome}"/>
